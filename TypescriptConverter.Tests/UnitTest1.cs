@@ -16,7 +16,12 @@ namespace TypescriptConverter.Tests
         {
             //var allCFiles = DirSearch(@"D:\Projects\stateless\");
             var allCFiles = Directory.GetFiles(@"D:\Projects\stateless\", "*.*", SearchOption.AllDirectories)
-                .Where(s => !s.EndsWith(".Designer.cs") && Path.GetExtension(s) == ".cs");
+                .Where(s =>
+                !s.Contains("obj")
+                && !s.EndsWith(".Designer.cs")
+                && !Path.GetFileName(s).Contains("Async")
+                && !s.EndsWith("AssemblyInfo.cs")
+                && Path.GetExtension(s) == ".cs");
 
             foreach (var f in allCFiles) {
                 var cScript = File.ReadAllText(f);

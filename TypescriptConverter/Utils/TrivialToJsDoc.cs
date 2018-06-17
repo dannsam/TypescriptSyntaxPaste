@@ -51,10 +51,10 @@ namespace RoslynTypeScript.Translation
             // See https://msdn.microsoft.com/en-us/library/b2s063f7.aspx
 
             // Get description(s)
-            lines.AddRange(doc.Descendants("summary").Select(x => $" * {x.Value.Trim()}"));
+            lines.AddRange(doc.Descendants("summary").SelectMany(x => x.Value.Split("\n", StringSplitOptions.RemoveEmptyEntries)).Select(x => $" * {x.Trim()}"));
 
             // Get remark(s)
-            lines.AddRange(doc.Descendants("remark").Select(x => $" * {x.Value.Trim()}"));
+            lines.AddRange(doc.Descendants("remark").SelectMany(x => x.Value.Split("\n", StringSplitOptions.RemoveEmptyEntries)).Select(x => $" * {x.Trim()}"));
 
             // Collect parameters
             lines.AddRange(doc.Descendants("param").Select(x => {
@@ -63,11 +63,16 @@ namespace RoslynTypeScript.Translation
                     return x.ToString();
                 }
 
-                return $" * @param {name.Value} {x.Value}";
+                return $" * @param {name.Value} {x.Value.Replace("\n", "")}";
             }));
 
             // Collect return object
-            lines.AddRange(doc.Descendants("returns").Select(x => $" * @return {x.Value}"));
+            foreach (var x in doc.Descendants("returns")) {
+                var value = x.Value.Replace("\n", "");
+                if (!string.IsNullOrWhiteSpace(value)) {
+                    lines.Add($" * @return {value}");
+                }
+            }
 
             lines.Add(" */");
 
