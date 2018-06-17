@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Patch\LabeledStatementAfterGotoPatch.cs" />
+    <Compile Remove="Patch\LabeledStatementBeforeGotoPatch.cs" />
+    <Compile Remove="Translation\ClassTranslationTemplate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Translation\ClassTranslationTemplate.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Translation\ClassTranslationTemplate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Translation\ClassTranslationTemplate.cs">
+      <DependentUpon>ClassTranslationTemplate.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.8.2" />
+  </ItemGroup>
+
+</Project>
